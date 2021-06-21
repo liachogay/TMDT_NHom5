@@ -1,0 +1,85 @@
+﻿@model WebMarket.Entities.Customer
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Index";
+}
+@section css{
+    <link href="~/css/thanhtoan.css" rel="stylesheet" />
+}
+<div class="checkout">
+    <div class="container">
+        <div class="py-5 text-center">
+            <p class="hd-payment">Payment</p>
+            <p class="lead">Shipping address</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 order-md-1">
+                <form asp-action="Pay" asp-controller="Thanhtoan" method="post">
+                    <div class="mb-3">
+                        <label for="username">Full name</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"></span>
+                            </div>
+                            <input asp-for="Name" class="form-control" id="username" placeholder="Enter your fullname" value="@Model.Name" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email">Email <span class="text-muted">(Optional)</span></label>
+                        <input type="email" asp-for="Email" class="form-control" id="email" placeholder="you@example.com" value="@Model.Email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address">Address</label>
+                        <input asp-for="Address" class="form-control" id="address" placeholder="Enter your address" value="@Model.Address" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Phone">Phone number</label>
+                        <input asp-for="Phone" class="form-control" id="Phone" placeholder="Enter your phone number..." value="@Model.Phone" required>
+                    </div>
+                    <hr class="mb-4">
+                    <button class="btn btn-payment btn-lg btn-block " type="submit">PAYMENT</button>
+                    <hr class="mb-4">
+                </form>
+            </div>
+
+            <div class="col-md-4 checkout-left">
+                <div class="checkout-left-basket">
+                    <h4>YOUR SHOPPING CART</h4>
+                    <ul>
+                        @foreach (var item1 in ViewBag.cart)
+                        {
+                            <li class="@item1.Id">
+                                @item1.Name
+                                <div style="position:relative; height:20px">
+                                    <div style="position:absolute; right:0;">
+                                        <span class="basket-quantity">@item1.Quantity </span>
+                                        <span>x </span>
+                                        <span> @item1.NewPrice đ</span>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    <li>
+                        Subtotal (@ViewBag.Quanity) <i>-</i>
+                        <span class="prices__value--final" style="float:right"> @ViewBag.TongTien</span>
+                    </li>
+                    </ul>
+                    <form class="card p-2">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Promo code">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-secondary">Redeem</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<WebMarket.Entities.Type>
+
+
+
+<div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Button</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    <a href="@Url.Action("Index","ProductManager",new { cate=item.IdCategory,ty = item.Id})" target="_blank"> @Html.DisplayFor(modelItem => item.Name)</a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Index","ProductManager",new { cate=item.IdCategory})" target="_blank"> @Html.DisplayFor(modelItem => item.IdCategoryNavigation.Name)</a>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                        <img src="https://img.icons8.com/fluent-systems-regular/24/000000/edit.png" style="height:20px; width:20px" />
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm btn-danger shadow-sm">
+                        <img src="https://img.icons8.com/windows/32/000000/delete-forever.png" style="height:20px; width:20px" />
+                    </a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

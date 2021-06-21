@@ -1,0 +1,256 @@
+﻿
+
+@using WebMarket.Helpers
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link href="~/css/font-awesome.css" rel="stylesheet">
+        <link href="~/css/style.css" rel="stylesheet" type="text/css" media="all" />
+   
+        <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
+        <link href='//fonts.googleapis.com/css?family=Raleway:400,100,100italic,200,200italic,300,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+        @RenderSection("css", false)
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+
+    </environment>
+    <!-- start-smoth-scrolling -->
+    <script type="text/javascript" src="~/js/move-top.js"></script>
+    <script type="text/javascript" src="~/js/easing.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({ scrollTop: $(this.hash).offset().top }, 1000);
+            });
+        });
+    </script>
+    <!-- start-smoth-scrolling -->
+
+</head>
+<body>
+    <!-- header -->
+    <div class="agileits_header">
+        <div class="container">
+            <div class="w3l_offers">
+                <p>SALE UP TO 70% OFF. USE CODE "SALE70%" . <a href="~/Home">SHOP NOW</a></p>
+            </div>
+            <div class="agile-login">
+                @{
+                    var user = @User.Claims.FirstOrDefault(c => c.Type == "Ma");
+                    string id = (user == null ? string.Empty : user.Value);
+                    
+                    if (id == "" )
+                    {
+                        <ul>
+                            <li><a href="~/Customer/Register"> Create Account </a></li>
+                            <li><a href="~/Customer/Login">Login</a></li>
+                            <li><a href="~/Home/Contact">Help</a></li>
+                        </ul>
+                    }
+                    else
+                    {
+            <ul>
+                <li><a href="~/Customer/"> Profile </a></li>
+                <li><a href="~/BillCheck/Index"> Bill</a></li>
+                <li><a href="~/Customer/Logout">Logout</a></li>
+                <li><a href="~/Home/Contact">Help</a></li>
+            </ul>
+                    }
+                }
+
+            </div>
+            <div class="product_list_header">
+                <div class="last">
+                    <a class="w3view-cart" href="~/Cart"><i class="fa fa-cart-arrow-down" aria-hidden="true"></i></a>
+                    <span class="count" id="cart_count">
+                        @{
+                            var data = Context.Session.Get<List<CartItem>>("GioHang");
+                            if (data == null)
+                            {
+                                data = new List<CartItem>();
+                            }
+                        }
+                        @(data.Sum(c => c.Quantity))
+                    </span>
+                </div>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+
+    <div class="logo_products">
+        <div class="container">
+            <div class="w3ls_logo_products_left1">
+                <ul class="phone_email">
+                    <li><i class="fa fa-phone" aria-hidden="true"></i>Order online or call us : (+0123) 234 567</li>
+
+                </ul>
+            </div>
+            <div class="w3ls_logo_products_left">
+                <h1><a href="~/Home">super Market</a></h1>
+            </div>
+            <!--search-->
+            <div class="w3l_search">
+                @if (ViewBag.type != null)
+                {
+                    <form asp-controller="Category" asp-action="ProductByType" method="get">
+                        <input type="hidden" name="data" value="@ViewBag.da" />
+                        <input type="search" name="SearchString" id="search1" placeholder="Search for a Product..." >
+                        <button type="submit" class="btn btn-default search" value="Tìm kiếm" aria-label="Left Align">
+                            <i class="fa fa-search" aria-hidden="true"> </i>
+                        </button>
+                        <div class="clearfix"></div>
+                    </form>
+                }
+                else
+                {
+                    <form asp-controller="Category" asp-action="Index" method="get">
+                        <input type="hidden" name="data" value="@ViewBag.da" />
+                        <input type="search" name="SearchString" id="search1" placeholder="Search for a Product..." >
+                        <button type="submit" class="btn btn-default search" value="Tìm kiếm" aria-label="Left Align">
+                            <i class="fa fa-search" aria-hidden="true"> </i>
+                        </button>
+                        <div class="clearfix"></div>
+                    </form>
+                }
+            </div>
+            <!--search-->
+          
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+    <!-- //header -->
+    <!-- navigation -->
+    @await Component.InvokeAsync("Navigation")
+    <!-- //navigation -->
+    <!--<partial name="_CookieConsentPartial" />-->
+    @RenderSection("background", false)
+
+
+<div class="render-body">
+    @RenderBody()
+</div>
+
+    <!-- //footer -->
+    <div class="footer">
+        <div class="container">
+            <div class="w3_footer_grids">
+                <div class="col-md-3 w3_footer_grid">
+                    <h3>Contact</h3>
+
+                    <ul class="address">
+                        <li><i class="glyphicon glyphicon-map-marker" aria-hidden="true"></i>22 Âu Cơ, phường 9, Tân Bình, <span>Thành phố Hồ Chí Minh, Việt Nam.</span></li>
+                        <li><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i><a href="mailto:Webmartkerinfo@example.com">Webmartkerinfo@example.com</a></li>
+                        <li><i class="glyphicon glyphicon-earphone" aria-hidden="true"></i>+(0123) 232 232</li>
+                    </ul>
+                </div>
+                <div class="col-md-3 w3_footer_grid">
+                    <h3>Information</h3>
+                    <ul class="info">
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="#">About Us</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="~/Home/Contact">Contact Us</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="#">Short Codes</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="#">FAQ's</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="~/Home/TopSelling">Special Products</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 w3_footer_grid">
+                    <h3>Category</h3>
+                    <ul class="info">
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="~/Category/Groceries">Groceries</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="~/Category/Household">Household</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="~/Category/Personal%20Care">Personal Care</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="~/Category/Packaged%20Foods">Packaged Foods</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 w3_footer_grid">
+                    <h3>Profile</h3>
+                    <ul class="info">
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="~/Home">Store</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="~/Cart">My Cart</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="~/Customer/Login">Login</a></li>
+                        <li><i class="fa fa-arrow-right" aria-hidden="true"></i><a href="~/Customer/Register">Create Account</a></li>
+                    </ul>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+
+        <div class="footer-copy">
+
+            <div class="container">
+                <p>© 2017 Super Market. All rights reserved | Design by <a href="http://w3layouts.com/">W3layouts</a></p>
+            </div>
+        </div>
+
+    </div>
+    <div class="footer-botm">
+        <div class="container">
+            <div class="w3layouts-foot">
+                <ul>
+                    <li><a href="#" class="w3_agile_facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                    <li><a href="#" class="agile_twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                    <li><a href="#" class="w3_agile_dribble"><i class="fa fa-dribbble" aria-hidden="true"></i></a></li>
+                    <li><a href="#" class="w3_agile_vimeo"><i class="fa fa-vimeo" aria-hidden="true"></i></a></li>
+                </ul>
+            </div>
+            <div class="payment-w3ls">
+                <img src="images/card.png" alt=" " class="img-responsive">
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- //footer -->
+    <environment include="Development">
+
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                crossorigin="anonymous"
+                integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd">
+        </script>
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+    <!-- main slider-banner -->
+    <script src="~/js/skdslider.min.js"></script>
+    <link href="~/css/skdslider.css" rel="stylesheet">
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            jQuery('#demo1').skdslider({ 'delay': 5000, 'animationSpeed': 2000, 'showNextPrev': true, 'showPlayButton': true, 'autoSlide': true, 'animationType': 'fading' });
+            $('#demo1').css('display: block');
+            jQuery('#responsive').change(function () {
+                $('#responsive_wrapper').width(jQuery(this).val());
+            });
+
+
+        });
+    </script>
+    <!-- //main slider-banner -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

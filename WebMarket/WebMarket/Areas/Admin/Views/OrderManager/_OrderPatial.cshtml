@@ -1,0 +1,215 @@
+﻿@model IEnumerable<WebMarket.Entities.Orderdetail>
+
+<style>
+    .styled-table {
+        border-collapse: collapse;
+        margin:35px 3%;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 94%;
+    }
+    .styled-table thead tr {
+        background-color: cornflowerblue;
+        color: black;
+        text-align: left;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        padding: 12px 15px;
+    }
+
+    .styled-table tbody tr {
+        border-bottom: 1px solid #dddddd;
+    }
+
+    .styled-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+    }
+
+    .styled-table tbody tr:last-of-type {
+        border-bottom: 2px solid #009879;
+    }
+
+    .styled-table tbody tr.active-row {
+        font-weight: bold;
+        color: #009879;
+    }
+
+    h1 {
+        margin: 0 0 0.25em;
+    }
+    /* Reset Select */
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        -ms-appearance: none;
+        appearance: none;
+        outline: 0;
+        box-shadow: none;
+        border: 0 !important;
+        background: cornflowerblue;
+        background-image: none;
+    }
+        /* Remove IE arrow */
+        select::-ms-expand {
+            display: none;
+        }
+    /* Custom Select */
+    .select {
+        position: relative;
+        display: flex;
+        line-height: 2;
+        background: cornflowerblue;
+        overflow: hidden;
+   
+    }
+
+    select {
+        flex: 1;
+        padding: 0 .5em;
+        color: #fff;
+        cursor: pointer;
+    }
+    /* Arrow */
+    .select::after {
+        content: '\25BC';
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0 1em;
+        background: #34495e;
+        cursor: pointer;
+        pointer-events: none;
+        -webkit-transition: .25s all ease;
+        -o-transition: .25s all ease;
+        transition: .25s all ease;
+    }
+    /* Transition */
+    .select:hover::after {
+        color: #f39c12;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        $('.btn').hide();
+        let sta = { "0": "Chưa xử lý", "1": "Xác nhận", "2": "Đang Giao", "3": "Hoàn tất" ,"4" :"Hủy Đơn"};
+        var selectElem = $("#mySelect");
+        $.each(sta, function (index, value ) {
+
+            if (index <= @ViewBag.order.Status+1) {
+                $("<option/>",
+                    {
+                        value: index,
+                        text: value
+
+                    }).appendTo(selectElem);
+                 if (@ViewBag.order.Status > 0) {
+                $("#mySelect option[value='0']").remove();
+            }
+            if (@ViewBag.order.Status > 1) {
+                $("#mySelect option[value='1']").remove();
+
+            }
+            if (@ViewBag.order.Status == 3) {
+                $("#mySelect option[value='2']").remove();
+               // $('.btn').remove();
+            }
+            }
+        });
+        $(document).ready(function () {
+            $('#mySelect').on('change', function () {
+                var $form = $(this).closest('form');
+                $form.find('input[type=submit]').click();
+            });
+        });
+    });
+
+</script>
+<script>
+    $('.status_order  option[value="@ViewBag.order.Status"]').css("display", "none");
+
+</script>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div>
+            <a href="@Url.Action("PrintAllReport", "ExportPDF",new {id= ViewBag.order.Id })" class="btn btn-light btn-icon-split d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm mb-3">
+                <img src="https://img.icons8.com/50/000000/pdf.png" style="height:20px; width:20px" />
+                <span class="text">export bill .pdf</span>
+            </a>
+        </div>
+        <table>
+            <tr><td><span style="color:black;">Họ tên: </span>@ViewBag.order.Name</td></tr>
+            <tr><td><span style="color:black;">Ngày Đặt: </span>@ViewBag.order.OrderDate</td></tr>
+            <tr><td><span style="color:black;">Địa chỉ: </span>@ViewBag.order.Address</td></tr>
+            <tr><td><span style="color:black;">SĐT: </span>@ViewBag.order.Phone</td></tr>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <table>
+            <tr><td><span style="color:black;">Phương thức thanh toán:</span>@ViewBag.order.PaymentType</td></tr>
+            <tr><td><span style="color:black;">ShipCost: </span>@ViewBag.order.ShipCost</td></tr>
+
+            <tr>
+                <td>
+
+                    <span style="color:black;">Trạng Thái: </span>
+                    <form method="post" asp-action="StatusChange" asp-controller="OrderManager" >
+                        <input type="hidden" name="Id_order" value="@ViewBag.order.Id" />
+                        <div class="select rounded">
+                            <select name="status_order" id="mySelect" class="status_order btn-info">
+                                <option disabled>Status</option>
+                            </select>
+                        </div>
+                        <input type="submit" class="btn btn-primary d-none" value="Change Status" />
+                    </form>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+</div>
+<hr />
+
+<div class="row mt-5">
+    <table class="styled-table ">
+        <thead>
+            <tr>
+                <th>Hình ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Giá tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td><img src="@item.IdProductNavigation.Image" style="display:block;max-height:90px;max-width:90px;width:auto;height:auto;" /></td>
+                        <td>@item.IdProductNavigation.Name</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Newprice</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div class="row">
+    <div class="col-md-8"></div>
+    <div class="col-md-4">
+        <table>
+            <tr>Tổng Tiền: </tr>
+            <tr>@ViewBag.order.TotalPrice</tr>
+        </table>
+    </div>
+</div>
+<hr />
+
+

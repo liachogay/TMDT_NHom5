@@ -1,0 +1,113 @@
+﻿@model IEnumerable<WebMarket.Entities.Order>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Index";
+}
+
+
+@section css {
+    <link href="~/css/Admin/orderDetail.css" rel="stylesheet" />
+    <style>
+        .link-order:hover {
+            transition: background-color 1s;
+            color: black;
+        }
+
+        a {
+            text-decoration: none !important;
+        }
+
+        .active1 {
+            border-bottom: 1px solid cornflowerblue;
+            transition: background-color 1s;
+            color:black;
+        }
+        .orderhistory {
+            margin: 15px 3% 35px 3%;
+            font-size: 0.9em;
+            font-family: sans-serif;
+            min-width: 94%;
+        }
+    </style>
+}
+
+@section Scripts{
+    <!-- Page level plugins -->
+
+    <script>
+        $(document).ready(function () {
+            $('.link-order').click(function () {
+                $('.link-order').removeClass("active1");
+                $(this).addClass("active1");
+                var id = $(this).attr("data-id");
+            //console.log(-->id);
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Detail", "OrderManager")',
+                    data: { id: id },
+                    success: function (res) {
+                        $(".message-body").html(res);
+                    }
+                });
+                console.log(id)
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("History", "OrderManager")',
+                    data: { id: id },
+                    success: function (res) {
+                        $(".orderhistory").html(res);
+                    }
+                });
+            });
+         });
+
+    </script>
+}
+<div class="">
+    <div class="">
+        <div class="email-wrapper wrapper">
+            <div class="row align-items-stretch">
+                <div class=" col-md-3 pt-4 pb-4 border-right bg-white">
+                    <div class="border-bottom pb-4 mb-3 px-3">
+                        <div class="form-group">
+                            <input class="form-control w-100" type="search" placeholder="Search mail" id="Mail-rearch">
+                        </div>
+                    </div>                   
+                    @{
+                        foreach (var item in Model)
+                        {
+                            <div class="mail-list  " style="border-top:1px solid">
+                                <div class="content link-order" data-id="@item.Id" style="position: relative">
+                                   <p class="sender-name">@item.Name </p><span style="right:0px; top:0px ">@item.Id</span> <i class="far fa-file-alt" style="float:right !important"></i>
+                                    <p class="message_text">@item.OrderDate.DayOfWeek/@item.OrderDate.Day/@item.OrderDate.Month/@item.OrderDate.Year</p>
+
+                                </div>
+                                <div class="details">
+                                   
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+                <div class="mail-view d-none d-md-block col-md-9 bg-white">
+                    <div class="row mb-4 pt-3 pl-3">
+                        <h5 style="font-size:20px;font-weight:500;">Chi Tiết Hóa đơn</h5>
+
+                    </div>
+                    <div>
+                        <div class="message-body">
+
+
+                    </div>
+                    <div class="row">
+                        <div class="orderhistory">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,116 @@
+﻿@model IEnumerable<WebMarket.Entities.Orderdetail>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    .render-body {
+        background: #EEF2F7;
+        padding-bottom: 50px;
+    }
+    .menu-bill {
+        box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034), 0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06), 0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086), 0 100px 80px rgba(0, 0, 0, 0.12);
+        margin:30px 0;
+        background: white;
+        border-radius: 5px;
+        padding: 18px 0;
+        display: flex;
+        flex-direction: row;
+        vertical-align: middle;
+        justify-content: space-around;
+    }
+    .row.display-flex {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .row.display-flex > [class*='col-'] {
+        flex-grow: 1;
+    }
+
+    .bill-table, .order-info {
+        box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034), 0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06), 0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086), 0 100px 80px rgba(0, 0, 0, 0.12);
+        margin-top: 30px;
+        background: white;
+        border-radius: 5px;
+        height: 100%;
+    }
+    .bill-table .bill-info{
+        display: flex;
+        flex-direction: row;
+        justify-content:space-between;
+        padding-top:30px;
+    }
+  
+    .bill-table .bill-info .image, .total {
+        display: flex;
+        flex-direction: row;
+        padding-left: 40px;
+    }
+    .bill-table .bill-info .image .info{
+        margin-left:20px;
+    }
+    .bill-table .bill-info .price{
+        padding-right: 50px;
+    }
+    .flex {
+        display: flex;
+        flex-direction: row;
+        padding: 30px 5px 0px 10px;
+    }
+    .ma-don{
+        color:orangered;
+    }
+    .col-bills{
+        margin-top:30px;
+        margin-bottom:30px;
+    }
+    .active-status {
+        border-bottom: 5px solid #fe9126;
+    }
+</style>
+<div class="container">
+    <div class="menu-bill ">      
+        <div class="status-menu active-status" data-status="0">
+            Chờ Xác Nhận
+        </div>
+        <div class="status-menu" data-status="1">
+            Đã Xác nhận
+        </div>
+        <div class="status-menu" data-status="2">
+            Đang Giao Hàng
+        </div>
+        <div class="status-menu" data-status="3">
+            Hoàn tất
+        </div>
+        <div class="status-menu" data-status="4">
+             Đã hủy
+        </div>
+
+    </div>
+    <div class="row display-flex table-bill">
+        @Html.Partial("_billtable",Model)
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".status-menu").click(function () {
+            $('.status-menu').removeClass("active-status");
+            $(this).addClass("active-status");
+
+            var status = $(this).attr("data-status");
+            $.post("@Url.Action("BillFilter","BillCheck")", { status: status })
+                .done(function (res) {
+                    $(".display-flex").html(res);
+                })
+        })
+
+        $("#delete").click(function () {
+            var id = $(this).attr('data-id');
+            $.post("@Url.Action("BillDelete", "BillCheck")", { id: id })
+            .done(function (res) {
+                $(".table-bill").html(res);
+            })
+        })
+    });
+</script>

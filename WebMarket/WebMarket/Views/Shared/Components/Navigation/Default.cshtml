@@ -1,0 +1,52 @@
+﻿@model IEnumerable<WebMarket.Entities.Type>
+
+@{
+    ViewData["Title"] = "Default";
+}
+<!-- navigation -->
+<div class="navigation-agileits">
+    <div class="container">
+        <nav class="navbar navbar-default">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header nav_2">
+                <button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse" data-target="#bs-megadropdown-tabs">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="~/Home" class="act">Home</a></li>
+                    <!-- Mega Menu -->
+                    @foreach (var cate in ViewBag.categories)
+                    {
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown">@cate.Name<b class="caret"></b></a>
+                            <ul class="dropdown-menu multi-column columns-3">
+                                <div class="row">
+                                    <div class="multi-gd-img">
+                                        <ul class="multi-column-dropdown">
+                                            <h6><a href="~/Category/@cate.Name">All @cate.Name </a></h6>
+                                            @foreach (var t in Model.Where(a => a.IdCategory == cate.Id))
+                                            {
+                                                <li><a  href="@Url.Action("ProductByType","Category",new { name =cate.Name ,type = @t.Name})">@t.Name</a></li>
+                                            }
+
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </ul>
+                        </li>
+                    }
+                    <li><a href="gourmet.html">Gourmet</a></li>
+                    <li><a href="~/Home/Offers">Offers</a></li>
+                    <li><a href="~/Home/Contact">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- //navigation -->

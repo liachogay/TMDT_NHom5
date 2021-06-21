@@ -1,0 +1,196 @@
+﻿@model IEnumerable<WebMarket.Entities.Productdetail>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Index";
+}
+@section Styles{
+    <!-- Custom styles for this page -->
+    <link href="~/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <script src="~/js/preview.js" type="text/javascript"></script>
+}
+<style>
+    body {
+        background: #EEF2F7;
+    }
+    .product-info, .form-create, .product-history {
+        box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034), 0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06), 0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086), 0 100px 80px rgba(0, 0, 0, 0.12);
+        border-radius: 5px;
+        background: white;
+        padding: 15px;
+    }
+    .product-info {
+        display: flex;
+    }
+    .product-info .product-img img {
+        width: 200px;
+        height: 200px;
+    }
+</style>
+
+<div class="row mb-4">
+    <div class="col-lg-5 col-md-12 ">
+        <div class="product-info">
+            <div class="product-img">
+                <img src="@Url.Content(ViewBag.product.Image)" alt="@ViewBag.product.Name" />
+
+            </div>
+            <div class="product-detail">
+                <h3>@ViewBag.product.Name</h3>
+                <h5>@ViewBag.product.Price</h5>
+                <label>Số lượng tồn kho:</label>
+                <input type="number" readonly value="@ViewBag.product.QuantityStock" style="width:100px" />
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7 col-md-12" >
+        <div class="form-create">
+            <form asp-action="Create" asp-controller="ProductDetail" method="post" id="ProducDetail">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input name="Id" class="form-control d-none" />
+                        <input name="IdProduct" class="form-control d-none" value="@ViewBag.product.Id"/>
+                        <div class="form-group">
+                            <label name="Quantity" class="control-label">Số lượng:</label>
+                            <input name="Quantity" class="form-control" id="Quantity" required />
+                        </div>
+                        <div class="form-group">
+                            <label name="Mfg" class="control-label">Ngày sản xuất:</label>
+                            <input type="date" name="Mfg" id="Mfg"class="form-control" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label name="EntryDate" class="control-label">Ngày nhập hàng: </label>
+                            <input type="datetime-local" name="EntryDate" class="form-control" id="EntryDate" required/>
+                        </div>
+                        <div class="form-group">
+                            <label name="Exp" class="control-label">Hạn sử dụng:</label>
+                            <input type="date" name="Exp" id="Exp"class="form-control" required/>
+                        </div>
+                    </div>
+                </div>
+                
+                    <input type="submit" value="Save" class="btn btn-success" />
+            
+            </form>
+        </div>
+      
+    </div>
+</div>
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form asp-action="FilterByDate" method="post" class="pb-2">
+            <label>From</label>
+            <input type="hidden" name="id" value="@ViewBag.product.Id" />
+            <input type="date" name="dateFrom" value="@ViewBag.date1" required/>
+            <label>To</label>
+            <input type="date" name="dateTo" value="@ViewBag.date2" />
+            <input type="submit" value="Filter" class="btn btn-info" required/>
+        </form>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Số Lượng
+                        </th>
+                        <th>
+                            Ngày/Giờ Nhập
+                        </th>
+                        <th>
+                            Ngày sản xuất
+                        </th>
+                        <th>
+                            Hạn sừ dụng
+                        </th>
+                        <th>
+                            Người cập nhật
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Id)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.EntryDate)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Mfg.Date, "{0:MM/dd/yyyy}")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Exp.Date, "{0:MM/dd/yyyy}")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdAdminNavigation.Name)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <!-- Page level plugins -->
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Page level custom scripts -->
+    <script src="~/js/Admin/demo/datatables-demo.js"></script>
+    <script>
+        $('#dataTable').DataTable({
+            paging: true
+        });
+    </script>
+    <script>
+        $().ready(function () {
+            $('#ProducDetail').validate({
+                rules: {
+                    'Quantity': {
+                        required: true,
+                        digits: true,
+                        min: 1
+                    },
+                    'Mfg': {
+                        required: true
+                    },
+                    'EntryDate': {
+                        required: true
+                    },
+                    'Exp': {
+                        required: true
+                    },
+                },
+                    messages: {
+                    'Quantity': {
+                        required: 'Vui lòng nhập số lượng!',
+                    number: 'Chỉ nhập số.',
+                    min: 'ít nhất 1 sản phẩm.'
+                    },
+                    'Mfg': {
+                        required: 'Vui lòng nhập ngày sản xuất.'
+                    },
+                    'EntryDate': {
+                        required: 'Vui lòng nhập ngày nhập.'
+                    },
+                    'Exp': {
+                        required: 'Vui lòng nhập hạn sử dụng.'
+                    },
+                },
+                messages: {
+
+                },
+            });
+        });
+    </script>
+}

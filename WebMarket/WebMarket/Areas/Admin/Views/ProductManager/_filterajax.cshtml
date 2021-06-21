@@ -1,0 +1,88 @@
+﻿@model IEnumerable<WebMarket.Entities.Product>
+
+
+
+    <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>
+                        Image
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        Discount
+                    </th>
+                    <th>
+                        Price
+                    </th>
+                    <th>
+                        Provider
+                    </th>
+                    <th>
+                        Button
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                @foreach (var item in Model)
+                {
+                <tr>
+                    
+                    <td>
+                        <img class="preview" src="@Url.Content(item.Image) " width="150px" height="150px" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdTypeNavigation.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Discount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdProviderNavigation.Name)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                            <img src="https://img.icons8.com/fluent-systems-regular/24/000000/edit.png" style="height:20px; width:20px" />
+                        </a>
+                        <a asp-action="Index" asp-controller="ProductDetail" asp-route-id="@item.Id" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm btn-info shadow-sm">
+                            <img src="https://img.icons8.com/windows/32/000000/Detail-view-of-part.png" style="height:20px; width:20px" />
+                        </a>
+                        @if (item.Status == "Visible")
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="d-none d-sm-inline-block btn btn-sm shadow-sm btn-danger shadow-sm">
+                                <img src="https://img.icons8.com/windows/32/000000/delete-forever.png" style="height:20px; width:20px" />
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="VisibleStatus" asp-route-id="@item.Id" class="d-none d-sm-inline-block btn btn-sm shadow-sm btn-success shadow-sm">
+                                <img src="https://img.icons8.com/ios-glyphs/30/000000/assignment-return.png" style="height:20px; width:20px" />
+                            </a>
+                        }
+                        <a asp-action="PriceUpdateByProduct" asp-controller="PriceUpdatedManager" asp-route-id="@item.Id" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm ">
+                            <img src="https://img.icons8.com/wired/64/000000/approve-and-update.png" style="height:20px; width:20px" />
+                        </a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+<script>
+    $('#dataTable').DataTable({
+        paging: true
+    });
+</script>

@@ -1,0 +1,151 @@
+﻿@model WebMarket.Entities.Customer
+
+@{
+    ViewData["Title"] = "Index";
+}
+<style>
+    .render-body {
+        background: #EEF2F7;
+    }
+    .customer-info, .customer-action {
+        box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034), 0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06), 0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086), 0 100px 80px rgba(0, 0, 0, 0.12);
+        margin-top: 50px;
+        background: white;
+        border-radius: 5px;
+    }
+    .customer-info .info-user{
+        padding-left:20px;
+    }
+    .customer-info .image-user {
+        padding-top:30px;
+        text-align: center;
+    }
+    .customer-info .image-user img {
+        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+        display: block;
+        margin: auto;
+    }
+
+    .customer-action {
+        padding:0 50px;
+    }
+    .customer-action .menu-action {
+        padding-top: 30px;
+        display: flex;
+        flex-direction: row;
+        vertical-align: middle;
+        justify-content: space-around;
+    }
+    .content-action{
+        margin-top:20px;
+        padding-bottom:10px;
+    }
+    .action{
+        text-align:center;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class=" customer-info">
+                <div class="image-user">
+                    @if (@ViewBag.user.Image == null)
+                    {
+                        <img src="@Url.Content("images/img-customer/default.png")" />
+                    }
+                    else
+                    {
+                        <img src="@ViewBag.user.Image" />
+                    }
+
+                    <h3>@ViewBag.user.Name</h3>
+                    <h5>@ViewBag.user.Email</h5>
+                </div>
+                <hr />
+                <div class="info-user">
+                    <div>
+                        <p>Name:<span class="info">@ViewBag.user.Name</span></p>
+                    </div>
+                    <hr />
+                    <div>
+                        <p>DateofBirth: <span class="info">@ViewBag.user.DateOfBirth.Day/@ViewBag.user.DateOfBirth.Month/@ViewBag.user.DateOfBirth.Year</span></p>
+
+                    </div>
+                    <hr />
+                    <div>
+                        <p>Address:<span class="info">@ViewBag.user.Address</span></p>
+
+                    </div>
+                    <hr />
+                    <div>
+                        <p>Phone: <span class="info">@ViewBag.user.Phone</span></p>
+
+                    </div>
+                    <hr />
+                    <div>
+                        <p>Email:<span class="info" >@ViewBag.user.Email</span></p>
+
+                    </div>
+                    <hr />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 ">
+            <div class="customer-action">
+                <div class="menu-action">
+                    <div class="action ">
+                        Edit Profiles
+                    </div>                   
+                </div>
+                <div class="content-action">
+                    <form asp-action="Edit" asp-controller="Customer" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <div class="form-group">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <hr />
+                        <div class="form-group">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <hr />
+                        <div class="form-group">
+                            <label asp-for="Address" class="control-label"></label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <hr />
+                        <div class="form-group">
+                            <label asp-for="Phone" class="control-label"></label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <hr />
+                        <div class="form-group">
+                            <label asp-for="DateOfBirth" class="control-label"></label>
+                            <input asp-for="DateOfBirth" class="form-control" />
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                        </div>
+                        <div class="form-group"> 
+                            <input asp-for="Image" class="form-control "  style="display:none !important"/>
+                        </div>
+                        <hr />
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-success" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    
+</script>

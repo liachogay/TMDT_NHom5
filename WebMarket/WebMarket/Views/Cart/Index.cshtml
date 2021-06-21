@@ -1,0 +1,96 @@
+@model List<WebMarket.Models.CartItem>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Index";
+
+}
+@section css{
+    <link href="~/css/Cart.css" rel="stylesheet" />
+}
+<div class="checkout">
+    <div class="container">
+        <div class="checkout-right">
+            @using WebMarket.Helpers
+            @{
+                var data = Context.Session.Get<List<CartItem>>("GioHang");
+                if (data == null) { data = new List<CartItem>(); }
+            }
+            @if (data.Sum(c => c.Quantity) == 0)
+            {
+                <h2 class="header-cart">
+                    Your shopping cart is empty!
+                </h2>
+                <div class="checkout-left">
+                    <div class="checkout-right-basket">
+                        <a href="~/Home"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Continue Shopping</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            }
+            else
+            {
+                <h2>
+                    Your shopping cart contains:
+                    <span class="count">@data.Sum(c => c.Quantity)</span>
+                    <span>Products</span>
+                </h2>
+                <table class="timetable_sub">
+                    <thead> <tr> <th>SL No.</th> <th>Product</th> <th>Quantity</th> <th>Product Name</th> <th>Price</th> <th>Remove</th> </tr> </thead>
+                    @{ int idx;
+                        idx = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+
+                        <tr class="rem1">
+                            <td class="invert">@idx</td>
+                            <td class="invert-image">
+                                <a href="single.html"> <img src="@Url.Content(item.Image)" alt=" " class="img-responsive" /></a>
+                            </td>
+                            <td class="invert invert-quantity">
+                                <div class="cart-products__qty"> <div class="qtty"> <span class="qty-decrease">-</span> <input type="tel" class="qty-input" value="@item.Quantity" data-masp='@item.Id' min="1" max="100"> <span class="qty-increase">+</span> </div> </div>
+                            </td>
+                            <td class="invert">@item.Name</td>
+                            <td class="invert">@item.Price</td>
+                            <td class="invert"> <div class="rem"> <div class="close1 cart-products__del" data-masp='@item.Id'></div> </div> </td>
+                        </tr>
+                        idx = idx + 1;
+                    }
+                </table>
+                <div class="checkout-left">
+                    <div class="checkout-left-basket">
+                        <h4>Continue to basket</h4>
+                        <ul>
+                            @foreach (var item1 in Model)
+                            {
+                                <li class="@item1.Id">
+                                    @item1.Name
+                                    <div style="position:relative; height:20px">
+                                        <div style="position:absolute; right:0;">
+                                            <span class="basket-quantity">@item1.Quantity </span>
+                                            <span>x </span>
+                                            <span> @item1.NewPrice đ</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                            <li>
+                                Subtotal <i>-</i>
+                                <span class="prices__value--final" style="float:right"> @ViewBag.TongTien</span>
+                            </li>
+                        </ul>
+
+                        <a href="@Url.Action("Index" , "Thanhtoan" )" class="btn payment-btn">Procceed to checkout</a>
+                    </div>
+                    <div class="checkout-right-basket">
+                        <a href="~/Home"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Continue Shopping</a>
+                    </div>
+                    <div class="clearfix"> </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/cart-method.js"></script> }
+

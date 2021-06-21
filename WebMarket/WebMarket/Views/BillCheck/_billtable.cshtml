@@ -1,0 +1,76 @@
+﻿@model IEnumerable<WebMarket.Entities.Orderdetail>
+
+@section css{
+<style>
+    #delete:hover {
+        color: #fff;
+        cursor:pointer;
+    }
+
+</style>
+   
+}
+
+
+@foreach (var order in ViewBag.order)
+{
+    <div class="col-md-7 col-bills">
+        <div class="bill-table ">
+            @foreach (var item in Model)
+            {
+                if (item.IdOrder == order.Id)
+                {
+                    <div class="bill-info">
+                        <div class="image">
+                            <img src="@Url.Content(item.IdProductNavigation.Image)" style="width:100px;height:100px;" />
+                            <div class="info">
+                                <div class="name">
+                                    @item.IdProductNavigation.Name
+                                </div>
+                                <div class="qiantity">
+                                    X @item.Quantity
+                                </div>
+                            </div>
+                        </div>
+                        <div class="price">
+                            @item.Newprice
+                        </div>
+                    </div>
+                }
+
+            }
+        </div>
+    </div>
+    <div class="col-md-5 col-bills">
+        <div class="order-info">
+            <div class="flex ma-don" style="display: flex; justify-content: space-around;">
+                <h4>Mã đơn hàng:</h4>
+                <p>MADH00 @order.Id</p>
+                @if (order.Status == 0)
+                {
+                    <button name="hủy" data-id=@order.Id id="delete" style=" border: 1px solid #ccc; border-radius: 2px; padding: 1px 2px; color: #000;background-color: salmon;">hủy đơn</button>
+                }
+            </div>
+            <div class="flex ma-don">
+                <h4>Status:</h4>
+                <p class="status">@order.Status</p>
+            </div>
+            <div class="flex">
+                <h4>Người nhận hàng:</h4>
+                <p>@order.Name</p>
+            </div>
+            <div class="flex">
+                <h4>Địa chỉ nhận hàng:</h4>
+                <p>@order.Address</p>
+            </div>
+            <div class="flex">
+                <h4>Số Điện thoại:</h4>
+                <p>@order.Phone</p>
+            </div>
+            <div class="flex">
+                <h4>Tổng tiền :</h4>
+                <p>@order.TotalPrice</p>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,157 @@
+﻿
+@model List<WebMarket.Models.ProductVM>
+@{
+    ViewData["Title"] = "TopSelling";
+}
+
+<div class="top-brands">
+    <div class="container">
+        <h2>Top selling offers</h2>
+        <div class="grid_3 grid_5">
+            <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                <ul id="myTab" class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#expeditions" id="expeditions-tab" role="tab" data-toggle="tab" aria-controls="expeditions" aria-expanded="true">All Products</a></li>
+                    <li role="presentation"><a href="#tours" role="tab" id="tours-tab" data-toggle="tab" aria-controls="tours">Daily Offers</a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div role="tabpanel" class="tab-pane fade in active" id="expeditions" aria-labelledby="expeditions-tab">
+                        <div class="agile-tp">
+                            <h5>All Products</h5>
+                            <p class="w3l-ad">We've pulled together all our advertised offers into one place, so you won't miss out on a great deal.</p>
+                        </div>
+                        <div class="row">
+                            @foreach (var item in Model.TakeLast(6))
+                            {
+                            <div class="col-md-4 top_brand_left-1 " style="padding-bottom: 1em;">
+                                <div class="hover14 column">
+                                    <div class="agile_top_brand_left_grid">
+                                        <div class="agile_top_brand_left_grid_pos">
+                                            <img src="~/images/offer.png" alt=" " class="img-responsive" />
+                                        </div>
+                                        <div class="agile_top_brand_left_grid1">
+                                            <figure>
+                                                <div class="snipcart-item block" data-id="@item.Id">
+                                                    <div class="snipcart-thumb">
+                                                        <a href="~/Category/@item.category/@item.type1/Detail/@item.EncryptedId"><img title=" " alt=" " src="@Url.Content(item.Image)" width="150px" height="150px" /></a>
+                                                        <p style="height:63px;">@item.Name</p>
+
+                                                        <div class="stars">
+                                                            <i class="fa fa-star blue-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star blue-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star blue-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star blue-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star gray-star" aria-hidden="true"></i>
+                                                        </div>
+                                                        <h4>
+                                                            @item.NewPrice
+                                                            @if (item.Discount > 0)
+                                                            {<span style="text-decoration:none; padding:0;"> | </span>
+                                                                <del>
+                                                                    @item.Price
+                                                                </del>
+                                                            }
+                                                        </h4>
+                                                    </div>
+                                                    <div class="snipcart-details top_brand_home_details">
+                                                        <span>@item.Description</span>
+                                                        <input type="hidden" value="@item.Description" class="item-desc"/>
+                                                        <input type="submit" name="submit" value="Add to cart" class="button show" data-toggle="modal" data-target="#modal-cart" />
+                                                    </div>
+                                                </div>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane fade" id="tours" aria-labelledby="tours-tab">
+                        <div class="agile-tp">
+                            <h5>Daily Offers</h5>
+                            <p class="w3l-ad">We've pulled together all our advertised offers into one place, so you won't miss out on a great deal.</p>
+                        </div>
+                        <div class="row">
+                            @foreach (var item in ViewBag.offeritems)
+                            {
+                            <div class="col-md-4 top_brand_left-1" style="padding-bottom: 1em;">
+                                <div class="hover14 column">
+                                    <div class="agile_top_brand_left_grid">
+                                        <div class="agile_top_brand_left_grid_pos">
+                                            <img src="~/images/offer.png" alt=" " class="img-responsive" />
+                                        </div>
+                                        <div class="agile_top_brand_left_grid1">
+                                            <figure>
+                                                <div class="snipcart-item block" data-id="@item.Id">
+                                                    <div class="snipcart-thumb">
+                                                        <a href="~/Category/@item.category/@item.type1/Detail/@item.EncryptedId"><img title=" " alt=" " src="@Url.Content(item.Image)" width="150px" height="150px" /></a>
+                                                        <p style="height:63px;">@item.Name</p>
+
+                                                        <div class="stars">
+                                                            <i class="fa fa-star blue-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star blue-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star blue-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star blue-star" aria-hidden="true"></i>
+                                                            <i class="fa fa-star gray-star" aria-hidden="true"></i>
+                                                        </div>
+                                                        <h4>
+                                                            @item.NewPrice 
+                                                            @if (item.Discount > 0)
+                                                            {<span style="text-decoration:none; padding:0;"> | </span>
+                                                                <del>
+                                                                    @item.Price
+                                                                </del>
+                                                            }
+                                                        </h4>
+                                                    </div>
+                                                    <div class="snipcart-details top_brand_home_details">
+                                                        <span>@item.Description</span>
+                                                        <input type="hidden" value="@item.Description" class="item-desc" />
+                                                        <input type="submit" name="submit" value="Add to cart" class="button show" data-toggle="modal" data-target="#modal-cart" />
+                                                    </div>
+                                                </div>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-cart" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered " role="document">
+        <div class="modal-content" style="margin:0 120px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" data-id="">
+                <div class="row">
+                    <div class="col-md-4 ">
+                        <img src="" width="150px" height="150px">
+                    </div>
+                    <div class="col-md-8 ">
+                        <div style="font-size:17px;font-weight:200"><span class="modal-item-name"></span></div>
+                        <div style="font-size:17px;font-weight:200">Price: <span class="modal-item-price"></span> </div>
+                        <div style="font-size:17px;font-weight:200">Quantity: <input type="number" value="1" name="quantity" min="1" max="100" /></div>
+                        <p style="margin-top:10px; text-align:justify;" class="model-item-desc" ></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary add-to-cart">Add To Cart</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/cart.js"></script>

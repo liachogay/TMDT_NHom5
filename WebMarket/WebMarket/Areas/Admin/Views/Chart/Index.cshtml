@@ -1,0 +1,208 @@
+﻿@model IEnumerable<WebMarket.Entities.Category>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Index";
+}
+@Html.ActionLink("Print", "PrintAllReport", "ExportPDF")
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Hóa Đơn Chưa Xác Nhận
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.bill0</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa fa-bell-o fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Earnings (Annual)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.bill1</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa fa-bell-o fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Tasks
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">@ViewBag.bill2</div>
+                            </div>
+                            <div class="col">
+                                <div class="progress progress-sm mr-2">
+                                    <div class="progress-bar bg-info" role="progressbar"
+                                         style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                         aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fa fa-bell-o fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Content Row -->
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">Charts</h1>
+    <p class="mb-4">
+        <label class="control-label"></label>
+        <select name="IdType" class="form-control cate" asp-items="ViewBag.IdCategory" style="width:auto!important"></select>
+    </p>
+
+    <!-- Content Row -->
+    <div class="row">
+
+        <!-- Donut Chart -->
+        <div class=" col-lg-5">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body">
+                    <div id="piechart_div" style="border: 1px solid #ccc">
+
+                    </div>
+                    <hr>
+                    Styling for the donut chart can be found in the
+                </div>
+            </div>
+        </div>
+
+        <div class=" col-lg-7">
+            <!-- Area Chart -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Col Chart</h6>
+                </div>
+                <div class="card-body chart_type">
+
+                    <hr>
+                    Styling for the area chart can be found in the
+                    <code>/js/demo/chart-area-demo.js</code> file.
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+@section Scripts{
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        var dem = 0;
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        $(".cate").change(function () {
+            var id = $(this).val();
+            for (var i = 1; i <= dem; ++i) {
+                var s = "#barchart_div" + i;
+                $(s).remove();
+            }
+            google.charts.setOnLoadCallback(drawChart(id));
+        });
+        function drawChart(idcate) {
+            $.ajax({
+                type: 'GET',
+                url: 'Chart/TypeChart',
+                contentType: "application/json; charset=utf-8",
+                data: { id: idcate },
+                success: function (res) {
+                    loadData(res);
+                }
+            })
+            function loadData(result) {
+                dem = 0;
+                var data01 = [['Type', 'Number Product']];
+                result.forEach(x => data01.push(Object.values(x)))
+                var data = new google.visualization.arrayToDataTable(data01);
+
+                var piechart_options = {
+                    title: 'Pie Chart: Number product by type',
+                    width: 370,
+                    height: 409,
+
+                };
+                var piechart = new google.visualization.PieChart(document.getElementById('piechart_div'));
+                piechart.draw(data, piechart_options);
+                result.forEach(x => google.charts.setOnLoadCallback(drawChart2(x.name)));
+            }
+        }
+
+        function drawChart2(name) {
+            $.ajax({
+                type: 'GET',
+                url: 'Chart/SellChart',
+                contentType: "application/json; charset=utf-8",
+                data: { nameType: name },
+                success: function (res) {
+                    loadData2(res)
+
+                }
+            })
+
+            function loadData2(result) {
+                var data02 = [['Product', 'Sold']];
+                result.forEach(x => data02.push(Object.values(x)))
+                var data = new google.visualization.arrayToDataTable(data02);
+
+                var barchart_options = {
+                    title: 'Barchart: How Much Products Sold By Last Night',
+                    width: 550,
+                    height: 409,
+                    legend: 'none'
+                };
+
+                dem++;
+                var s = "barchart_div" + dem;
+                $(".chart_type").append("<div id='barchart_div" + dem + "'></div>");
+                var barchart = new google.visualization.BarChart(document.getElementById(s));
+                barchart.draw(data, barchart_options);
+            }
+        }
+
+
+    </script>
+}

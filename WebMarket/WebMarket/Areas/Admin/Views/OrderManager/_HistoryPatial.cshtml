@@ -1,0 +1,40 @@
+﻿@model IEnumerable<WebMarket.Entities.Orderupdate>
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Hóa đơn</th>
+            <th>Thời gian cập nhật</th>
+            <th>Trạng thái trước</th>
+            <th>Trạng thái sau</th>
+            <th>Người xừ lý</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @item.IdOrderNavigation.Name
+            </td>
+            <td>
+                @item.DateUpdate
+            </td>
+            <td>
+                @item.OldStatus
+            </td>
+            <td>
+                @item.NewStatus
+            </td>
+            <td>
+                @if (item.IdAdmin != null)
+                {
+                    @item.IdAdminNavigation.Name
+                }
+
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
